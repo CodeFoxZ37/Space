@@ -1,0 +1,24 @@
+body{
+    background-color: rgb(15, 7, 17);
+    margin: 0;
+    color: #fff;
+    font-family: monospace;
+}
+
+.list{
+    left: 350px;
+    top: 50px;
+    border: solid 3px white;
+    border-radius: 5px;
+    position: absolute;
+    width: 650px;
+    height: 570px;
+    overflow-y: scroll;
+    justify-content: center;
+}
+
+.container{
+    background-color: rgba(0, 0, 0, 0.301);
+    height: 40px;
+    width: 100%;
+}
