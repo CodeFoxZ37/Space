@@ -4,7 +4,7 @@ import pandas as pd
 connection = sql.connect(
     host = "216.137.177.250",
     port = "3306",
-    user = "computosmd_space",
+    user = "tmp_computosmd@localhost",
     password = "2007_Space.001",
     database = "computosmd_space"
 )

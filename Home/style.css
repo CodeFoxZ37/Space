@@ -30,8 +30,8 @@ body{
 
     a{
         background-color: #3fa636;
-        width: 50%;
-        height: 30px;
+        width: 70%;
+        height: 40px;
         display: grid;
         place-items: center;
         border-radius: 7px;
@@ -39,5 +39,10 @@ body{
         .go{
             width: 20px;
         }
+    }
+
+    h4{
+        font-size: 30px;
+        margin: 0;
     }
 }
