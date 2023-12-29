@@ -6,6 +6,5 @@ const alm = document.querySelector(".alm")
 btn.addEventListener("click",()=>{
     localStorage.setItem("user",`${input0.value}`)
     localStorage.setItem("password",`${input1.value}`)
-    
+    window.history.back(); 
 })
-

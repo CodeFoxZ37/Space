@@ -1,10 +1,10 @@
-import mysql.connector as sql
+import mysql.connector
 import pandas as pd
 
-connection = sql.connect(
+connection = mysql.connector.connect(
     host = "216.137.177.250",
     port = "3306",
-    user = "tmp_computosmd@localhost",
+    user = "computosmd_space",
     password = "2007_Space.001",
     database = "computosmd_space"
 )
