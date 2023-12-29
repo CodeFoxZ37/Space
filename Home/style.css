@@ -22,6 +22,7 @@ body{
     place-items: center;
     display: grid;
     margin-top: 100px;
+    transition: transform 0.30s ease;
     
     img{
         width: 150px;
@@ -44,5 +45,12 @@ body{
     h4{
         font-size: 30px;
         margin: 0;
+        transition: color 0.30s ease;
     }
 }
+
+.container-play:hover{
+    transform: scale(1.1);
+    color: #059477;
+}
+
