@@ -42,32 +42,6 @@ class AsteroidRocket{
   asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 200 + 100)}
 }
 
-class energySphere{
-  constructor(x, y, maxRadius, growthRate) {
-    this.x = x;
-    this.y = y;
-    this.radius = 0;
-    this.maxRadius = maxRadius;
-    this.growthRate = growthRate;
-  }
-
-  update() {
-    if (this.radius < this.maxRadius) {
-      this.radius += this.growthRate;
-    }
-  }
-  Drawsphere(){
-    ctx3.beginPath();
-    ctx3.arc(this.x, this.y, 8, 0, 2 * Math.PI);
-    ctx3.strokeStyle = "#3498db";
-    ctx3.stroke();
-    ctx3.closePath();
-    requestAnimationFrame(this.Drawsphere)
-  }
-
-}
-
-
 // Nave espacial
 const spaceship = new AsteroidRocket(canvas2.width / 8,canvas2.height - 190,5,"image/astronave.png")
 // Asteroides
@@ -83,9 +57,6 @@ const asteroidDeath = new AsteroidRocket(canvas.width + 2500, canvas.height - Ma
 const ToxiAsteroid = new AsteroidRocket(canvas.width + 2000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideToxico.png')
 const asteroidElectric = new AsteroidRocket(canvas.width + 2300, canvas.height - Math.round(Math.random() * 250 + 80), -2,'image/AsteroideEletrico.png')
 const Asteroid_z = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/Asteroide-Z.png')
-
-const shere = new energySphere(200, 100, 50, 2); // Ajusta el growthRate según sea necesario
-let animationStarted = false;
 
 // Funciones para que se ejecute el programa
 const checkCollision = ()=> {
@@ -118,9 +89,7 @@ const checkCollision = ()=> {
       setTimeout(()=>{spaceship.speed = 5},10000);
     }
     
-    else if(distancia6 < meteoriteRadius + circleRadius){
-      power = true;
-    }
+    else if(distancia6 < meteoriteRadius + circleRadius){power = true;}
 
     else if(distancia6_2 < meteoriteRadius + circleRadius && mobility == false){
       asteroid.asteroidx()
@@ -144,7 +113,18 @@ document.addEventListener("keydown", e => keyState[e.key] = true);
 document.addEventListener("keyup", e => keyState[e.key] = false);
 let mobility = true;
 let laserx = spaceship.x;
-let lasery = spaceship.y / canvas.height -2
+let lasery = spaceship.y / 2
+const createrLaser = ()=>{
+  ctx3.clearRect(0, 0, canvas.width, canvas.height)
+  ctx3.beginPath();
+  ctx3.arc(laserx, lasery, 30, 0, 2 * Math.PI);
+  ctx3.fillStyle = "#3498db";
+  ctx3.fill();
+  ctx3.closePath();
+  if(laserx < canvas.width + 5) laserx += 1
+  requestAnimationFrame(createrLaser)
+}
+
 
 function handleKeyboardInput() {
   if (keyState["ArrowUp"] && spaceship.y > 10 && mobility == true) {
@@ -155,19 +135,7 @@ function handleKeyboardInput() {
   }
 
   if(keyState[" "] && power == true){
-    if (!animationStarted) {
-      animationStarted = true;
-      animate();
-    }
-
-    function animate() {
-      shere.update();
-      shere.Drawsphere();
-
-      if (shere.radius < shere.maxRadius) {
-        requestAnimationFrame(animate);
-      }
-    }
+    createrLaser()
     mobility = false
     laserx = spaceship.x
     setTimeout(()=>{
