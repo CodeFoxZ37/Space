@@ -3,67 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crecimiento de Círculo</title>
+  <title>Animación de Onda</title>
   <style>
-    canvas {
-      border: 1px solid #000;
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .cuadro {
+      width: 100px;
+      height: 100px;
+      background-color: #3498db;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .onda {
+      position: absolute;
+      background: radial-gradient(circle, transparent 15%, rgba(102, 52, 219, 0.7) 70%);
+      transform: scale(0);
+      animation: onda-animacion 0.5s ease-out;
+    }
+
+    @keyframes onda-animacion {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Crecimiento de Círculo</h1>
-  <canvas id="myCanvas" width="400" height="200"></canvas>
-  <button id="startButton">Comenzar Animación</button>
+
+  <div class="cuadro" onclick="onCuadroClick(this)">
+    <div class="onda"></div>
+  </div>
 
   <script>
-    const canvas = document.getElementById('myCanvas');
-    const ctx = canvas.getContext('2d');
+    function onCuadroClick(cuadro) {
+      const onda = document.createElement('div');
+      onda.classList.add('onda');
+      cuadro.appendChild(onda);
 
-    class GrowingCircle {
-      constructor(x, y, maxRadius, growthRate) {
-        this.x = x;
-        this.y = y;
-        this.radius = 0;
-        this.maxRadius = maxRadius;
-        this.growthRate = growthRate;
-      }
-
-      update() {
-        if (this.radius < this.maxRadius) {
-          this.radius += this.growthRate;
-        }
-      }
-
-      draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-        ctx.fillStyle = 'blue';
-        ctx.fill();
-        ctx.closePath();
-      }
+      setTimeout(() => {
+        onda.remove();
+      }, 5000);
     }
-
-    const growingCircle = new GrowingCircle(200, 100, 50, 2); // Ajusta el growthRate según sea necesario
-    let animationStarted = false;
-
-    function startAnimation() {
-      if (!animationStarted) {
-        animationStarted = true;
-        animate();
-      }
-    }
-
-    function animate() {
-      growingCircle.update();
-      growingCircle.draw();
-
-      if (growingCircle.radius < growingCircle.maxRadius) {
-        requestAnimationFrame(animate);
-      }
-    }
-
-    document.getElementById('startButton').addEventListener('click', startAnimation);
   </script>
+
 </body>
 </html>

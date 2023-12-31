@@ -71,9 +71,16 @@ const checkCollision = ()=> {
     const distancia4 = Math.sqrt((ToxiAsteroid.x - spaceship.x) ** 2 + (ToxiAsteroid.y - spaceship.y) ** 2);
     const distancia5 = Math.sqrt((asteroidElectric.x - spaceship.x) ** 2 + (asteroidElectric.y - spaceship.y) ** 2);
     const distancia6 = Math.sqrt((Asteroid_z.x - spaceship.x) ** 2 + (Asteroid_z.y - spaceship.y) ** 2);
-    const distancia6_2 = Math.sqrt((laserx - asteroid.x || asteroidDeath.x || asteroidHealth.x || ToxiAsteroid.x || asteroidElectric.x) ** 2 + 
-    (lasery - asteroid.y || asteroidDeath.y || asteroidHealth.y || ToxiAsteroid.y || asteroidElectric.y) ** 2);
-
+    const distances = [
+      Math.sqrt((laserx - asteroid.x) ** 2 + (lasery - asteroid.y) ** 2),
+      Math.sqrt((laserx - asteroidDeath.x) ** 2 + (lasery - asteroidDeath.y) ** 2),
+      Math.sqrt((laserx - asteroidHealth.x) ** 2 + (lasery - asteroidHealth.y) ** 2),
+      Math.sqrt((laserx - ToxiAsteroid.x) ** 2 + (lasery - ToxiAsteroid.y) ** 2),
+      Math.sqrt((laserx - asteroidElectric.x) ** 2 + (lasery - asteroidElectric.y) ** 2),
+    ];
+    
+    const distancia6_2 = Math.min(...distances);
+    
     // Si la distancia es menor que la suma de los radios, hay colisión
     if (distancia1 < meteoriteRadius + circleRadius) life.style.width = `${parseInt(life.offsetWidth) - 10}px`
     else if (distancia2 < meteoriteRadius + circleRadius) life.style.width = `0px`
@@ -112,7 +119,7 @@ let keyState = {};
 document.addEventListener("keydown", e => keyState[e.key] = true);
 document.addEventListener("keyup", e => keyState[e.key] = false);
 let mobility = true;
-let laserx = spaceship.x;
+let laserx = canvas2.width / 8;
 let lasery = spaceship.y / 2
 const createrLaser = ()=>{
   ctx3.clearRect(0, 0, canvas.width, canvas.height)
@@ -137,7 +144,7 @@ function handleKeyboardInput() {
   if(keyState[" "] && power == true){
     createrLaser()
     mobility = false
-    laserx = spaceship.x
+    lasery = spaceship.y
     setTimeout(()=>{
       power = false
       mobility = true
