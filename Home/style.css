@@ -22,7 +22,7 @@ body{
     margin: 0;
 }
 
-.container-play{
+.card{
     background-color: rgb(20, 33, 59);
     width: 250px;
     height: 250px;
@@ -32,10 +32,11 @@ body{
     display: grid;
     margin: 0 50px;
     transition: transform 0.30s ease;
+    box-shadow: 10px 5px #ffffffe0;
     
     img{
         margin: 0;
-        width: 100%;
+        width: 200px;
         height: 165px;
         border-radius: 7px;
     }
@@ -48,7 +49,9 @@ body{
     }
 }
 
-.container-play:hover{
+.card:hover{
     color: #059477;
+    box-shadow: 3px 10px #059477;
+    transform: scale(1.1);
 }
 
