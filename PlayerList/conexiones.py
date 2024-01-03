@@ -12,17 +12,26 @@ connection = mysql.connector.connect(
 )
 
 cursor = connection.cursor()
-consulta_sql = "SELECT Users, Score FROM space_score"
-cursor.execute(consulta_sql)
-resultados = cursor.fetchall()
-df = pd.DataFrame(resultados)
+sqls = [
+    "SELECT Users FROM space_score",
+    "SELECT Score FROM space_score"
+]
 
+for sql in sqls:
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+     resultados = cursor.fetchall()
+
+df = pd.DataFrame(resultados)
 app = FastAPI()
+
+cursor.close()
+connection.close()
 
 @app.get("/")
 
 def info():
-    return {"user":df}
+    return {"user":f"{df}"}
 
 
 origins = [
