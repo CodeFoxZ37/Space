@@ -35,6 +35,10 @@ async def form(username: str = Form(...), password: str = Form(...)):
         query = "INSERT INTO Users(User, Password) VALUES (%s, %s)"
         values = (username, password)
         cursor.execute(query, values)
+
+        query2 = "INSERT INTO space_score(User, Score) VALUES (%s, 0)"
+        values2 = (username,)
+        cursor.execute(query2,values2)
         connection.commit()
     except mysql.connector.Error as err:
         print(f"Hubo un error: {err}")
@@ -44,12 +48,23 @@ async def form(username: str = Form(...), password: str = Form(...)):
     return {"message": "Usuario añadido con éxito"}
 
 @app.post("/score")
-async def update():
- query = """
-    UPDATE usuarios
-    SET puntuacion = %s
-    WHERE username = %s AND puntuacion < %s;
-   """
+async def update(item: Item):
+ try:
+     cursor = connection.cursor()
+     query = """
+     UPDATE space_score
+     SET Score = %s
+     WHERE User = %s AND Score < %s;
+     """
+     values = (item.score, item.username, item.score)
+     cursor.execute(query,values)
+     connection.commit()
+ except mysql.connector.Error as err:
+        print(f"Hubo un error: {err}")
+        return {"error": str(err)}
+ finally:
+     cursor.close()
+
 # Configuración de CORS
 origins = ["http://127.0.0.1:5500"]
 app.add_middleware(

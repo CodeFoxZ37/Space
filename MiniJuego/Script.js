@@ -52,9 +52,9 @@ const asteroids = [
   new AsteroidRocket(canvas.width + 220, canvas.height - Math.round(Math.random() * 250 + 80), -5,'image/asteroide.png'),
 ]
 const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideSalud.png')
-const asteroidDeath = new AsteroidRocket(canvas.width + 3000, canvas.height - Math.round(Math.random() * 250 + 80), -2,'image/asteroideN2.png')
+const asteroidDeath = new AsteroidRocket(canvas.width + 3000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideN2.png')
 const ToxiAsteroid = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideToxico.png')
-const asteroidElectric = new AsteroidRocket(canvas.width + 5000, canvas.height - Math.round(Math.random() * 250 + 80), -2,'image/AsteroideEletrico.png')
+const asteroidElectric = new AsteroidRocket(canvas.width + 5000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/AsteroideEletrico.png')
 
 // Funciones para que se ejecute el programa
 const checkCollision = ()=> {
@@ -175,19 +175,24 @@ const writename = ()=>{
 updateMeteorite(); 
 writename()
 reboot.addEventListener("click", function(){
-  const data ={
-    username: `${localStorage.getItem("user")}`,
-    score: parseInt(score.textContent)
-  }
-  fetch("http://127.0.0.1:8000/score",{method: "POST",headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify(data)})
-
-    .then(response => {
-     if (!response.ok) throw new Error('Network response was not ok')
-     return response.json();
+  if(localStorage.getItem("user") !== null){
+    const data ={
+      username: `${localStorage.getItem("user")}`,
+      score: parseInt(score.textContent)
+    }
+    alert(data.username)
+    fetch("http://127.0.0.1:8000/score", {
+      method: "post",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     })
-
+    .then(response => {
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.json();
+    })
     .then(data => console.log('Success:', data))
-    .catch(error => console.error('Error:', error));
-  location.reload()
-})
+    .catch(error => console.error('Fetch error:', error));
+  }
+  
+  location.reload();
+});
