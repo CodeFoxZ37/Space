@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <form action="">
+    <form id="form1"action="http://127.0.0.1:8000/form" method="post">
         <b>Inicio de sesion</b>
         <p>Nombre</p>
-        <input type="text" class="input0" placeholder="Introduce tu nombre de usuario">
+        <input type="text" class="input0" placeholder="Introduce tu nombre de usuario" name="username">
         <p>Contraseña</p>
-        <input type="password" class="input1" placeholder="Introduce tu contraseña" minlength="4">
-        <button class="btn">Iniciar sesion</button>
+        <input type="password" class="input1" placeholder="Introduce tu contraseña" minlength="4" name="password">
+        <button type="submit">Iniciar sesion</button>
     </form>
     <script src="script.js"></script>
 

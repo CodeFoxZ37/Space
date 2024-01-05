@@ -3,26 +3,41 @@ body{
     margin: 0;
     color: #fff;
     font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .list{
-    left: 350px;
     top: 50px;
     border: solid 3px white;
     border-radius: 5px;
     position: absolute;
-    width: 650px;
+    width: 50%;
     height: 570px;
     overflow-y: scroll;
-    justify-content: center;
+
+    .users{
+        margin: 0 auto;
+        margin-top: 10px;
+        background-color: #fff;
+        color: #1abc9c;
+        width: 90%;
+        height: 50px;
+        border-radius: 7px;
+        font-size: 170%;
+        box-shadow: 0px 4px #007740;
+    }
+    b{
+        display: inline-block;
+    }
+    .name{ position: absolute; margin: 11px; left: 60px;}
+    .number{ position: absolute; margin: 11px;}
+    .score{ margin: 11px 80%; color: rgba(0, 162, 255, 0.678);}
 }
 
 .container{
     background-color: rgba(0, 0, 0, 0.301);
     height: 40px;
     width: 100%;
-}
-
-.users{
-    background-color: #fff;
 }

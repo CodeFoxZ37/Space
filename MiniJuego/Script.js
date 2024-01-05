@@ -9,6 +9,7 @@ const reboot = document.querySelector(".reboot")
 const death = document.querySelector(".death")
 const death2 = document.querySelector(".deathScreen")
 const score = document.querySelector(".score")
+const username = document.querySelector(".name")
 
 // Propiedades base de los meteoritos
 class AsteroidRocket{
@@ -50,10 +51,10 @@ const asteroids = [
   new AsteroidRocket(canvas.width + 280, canvas.height - Math.round(Math.random() * 250 + 80), -6,'image/asteroide.png'),
   new AsteroidRocket(canvas.width + 220, canvas.height - Math.round(Math.random() * 250 + 80), -5,'image/asteroide.png'),
 ]
-const asteroidHealth = new AsteroidRocket(canvas.width + 200, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideSalud.png')
-const asteroidDeath = new AsteroidRocket(canvas.width + 200, canvas.height - Math.round(Math.random() * 250 + 80), -2,'image/asteroideN2.png')
-const ToxiAsteroid = new AsteroidRocket(canvas.width + 200, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideToxico.png')
-const asteroidElectric = new AsteroidRocket(canvas.width + 200, canvas.height - Math.round(Math.random() * 250 + 80), -2,'image/AsteroideEletrico.png')
+const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideSalud.png')
+const asteroidDeath = new AsteroidRocket(canvas.width + 3000, canvas.height - Math.round(Math.random() * 250 + 80), -2,'image/asteroideN2.png')
+const ToxiAsteroid = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideToxico.png')
+const asteroidElectric = new AsteroidRocket(canvas.width + 5000, canvas.height - Math.round(Math.random() * 250 + 80), -2,'image/AsteroideEletrico.png')
 
 // Funciones para que se ejecute el programa
 const checkCollision = ()=> {
@@ -87,6 +88,7 @@ const checkCollision = ()=> {
       death.style.display = "block"
       death2.style.display = "block"
       clearInterval(time);
+      scorenow = score.value
     }
   }
 }
@@ -164,7 +166,28 @@ function updateMeteorite(){
   requestAnimationFrame(updateMeteorite);
 }
 
+const writename = ()=>{
+  let name = localStorage.getItem("user")
+  username.textContent = `${name}`
+}
+
 // inicio del movimiento de los meteoritos
 updateMeteorite(); 
-// Pantalla de muerte 
-reboot.addEventListener("click", function(){location.reload()})
+writename()
+reboot.addEventListener("click", function(){
+  const data ={
+    username: `${localStorage.getItem("user")}`,
+    score: parseInt(score.textContent)
+  }
+  fetch("http://127.0.0.1:8000/score",{method: "POST",headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify(data)})
+
+    .then(response => {
+     if (!response.ok) throw new Error('Network response was not ok')
+     return response.json();
+    })
+
+    .then(data => console.log('Success:', data))
+    .catch(error => console.error('Error:', error));
+  location.reload()
+})
