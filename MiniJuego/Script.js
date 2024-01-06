@@ -10,7 +10,7 @@ const death = document.querySelector(".death")
 const death2 = document.querySelector(".deathScreen")
 const score = document.querySelector(".score")
 let power = false;
-
+let radius;
 // Propiedades base de los meteoritos
 class AsteroidRocket{
   constructor(x,y,speed,image){
@@ -71,16 +71,9 @@ const checkCollision = ()=> {
     const distancia4 = Math.sqrt((ToxiAsteroid.x - spaceship.x) ** 2 + (ToxiAsteroid.y - spaceship.y) ** 2);
     const distancia5 = Math.sqrt((asteroidElectric.x - spaceship.x) ** 2 + (asteroidElectric.y - spaceship.y) ** 2);
     const distancia6 = Math.sqrt((Asteroid_z.x - spaceship.x) ** 2 + (Asteroid_z.y - spaceship.y) ** 2);
-    const distances = [
-      Math.sqrt((laserx - asteroid.x) ** 2 + (lasery - asteroid.y) ** 2),
-      Math.sqrt((laserx - asteroidDeath.x) ** 2 + (lasery - asteroidDeath.y) ** 2),
-      Math.sqrt((laserx - asteroidHealth.x) ** 2 + (lasery - asteroidHealth.y) ** 2),
-      Math.sqrt((laserx - ToxiAsteroid.x) ** 2 + (lasery - ToxiAsteroid.y) ** 2),
-      Math.sqrt((laserx - asteroidElectric.x) ** 2 + (lasery - asteroidElectric.y) ** 2),
-    ];
-    
-    const distancia6_2 = Math.min(...distances);
-    
+    const ditances = asteroids.some(asteroid => {
+      return Math.sqrt((laserx - asteroid.x ) ** 2 + (lasery - asteroid.y ) ** 2) <= radius;
+  });
     // Si la distancia es menor que la suma de los radios, hay colisión
     if (distancia1 < meteoriteRadius + circleRadius) life.style.width = `${parseInt(life.offsetWidth) - 10}px`
     else if (distancia2 < meteoriteRadius + circleRadius) life.style.width = `0px`
@@ -96,9 +89,9 @@ const checkCollision = ()=> {
       setTimeout(()=>{spaceship.speed = 5},10000);
     }
     
-    else if(distancia6 < meteoriteRadius + circleRadius){power = true;}
+    else if(distancia6 < meteoriteRadius + circleRadius) power = true;
 
-    else if(distancia6_2 < meteoriteRadius + circleRadius && mobility == false){
+    else if(ditances && permisio){
       asteroid.asteroidx()
       asteroidDeath.asteroidx()
       asteroidHealth.asteroidx()
@@ -118,17 +111,18 @@ const checkCollision = ()=> {
 let keyState = {};
 document.addEventListener("keydown", e => keyState[e.key] = true);
 document.addEventListener("keyup", e => keyState[e.key] = false);
-let mobility = true;
+let permisio = false;
 let laserx = canvas2.width / 8;
 let lasery = spaceship.y
 const createrLaser = ()=>{
-  let radius = 0;
-  const maxRadius = 900;
+  radius = 0;
+  const maxRadius =1000;
   const interval = setInterval(function() {
       ctx3.clearRect(0, 0, canvas.width, canvas.height);
       ctx3.beginPath();
       ctx3.arc(laserx, lasery, radius, 0, 2 * Math.PI);
-      ctx3.strokeStyle = "red"
+      ctx3.lineWidth = 10
+      ctx3.strokeStyle = "#00715b"
       ctx3.stroke();
       radius += 10;
       if (radius > maxRadius) clearInterval(interval);
@@ -137,20 +131,20 @@ const createrLaser = ()=>{
 
 
 function handleKeyboardInput() {
-  if (keyState["ArrowUp"] && spaceship.y > 10 && mobility == true) {
+  if (keyState["ArrowUp"] && spaceship.y > 10) {
     spaceship.y -= spaceship.speed;
   }
-  if (keyState["ArrowDown"] && spaceship.y < 280 && mobility == true) {
+  if (keyState["ArrowDown"] && spaceship.y < 280) {
     spaceship.y += spaceship.speed;
   }
 
   if(keyState[" "] && power == true){
     createrLaser()
-    mobility = false
+    permisio = true
     lasery = spaceship.y
     setTimeout(()=>{
       power = false
-      mobility = true
+      permisio = false
       ctx3.clearRect(0, 0, canvas.width, canvas.height)},5000)
   }
 }
@@ -181,7 +175,7 @@ function updateMeteorite(){
     }
 
     else if(Asteroid_z.x < -50){
-      Asteroid_z.SpecialAsteroidDisplacement(4000,1)
+      Asteroid_z.SpecialAsteroidDisplacement(10000,1)
     }
 
     asteroid.x += asteroid.speed
