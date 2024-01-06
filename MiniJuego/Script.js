@@ -180,7 +180,8 @@ reboot.addEventListener("click", function(){
       username: `${localStorage.getItem("user")}`,
       score: parseInt(score.textContent)
     }
-    alert(data.username)
+
+
     fetch("http://127.0.0.1:8000/score", {
       method: "post",
       headers: { 'Content-Type': 'application/json' },
@@ -191,7 +192,10 @@ reboot.addEventListener("click", function(){
       return response.json();
     })
     .then(data => console.log('Success:', data))
-    .catch(error => console.error('Fetch error:', error));
+    .catch(error => {
+      console.error('Fetch error:', error);
+      console.log(error);
+    });
   }
   
   location.reload();

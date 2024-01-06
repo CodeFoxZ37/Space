@@ -1,71 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    canvas {
-      display: block;
-      margin-top: 20px;
-    }
-  </style>
-  <title>Botón con Círculo</title>
+    <title>Onda Expansiva en Canvas</title>
+    <style>
+        #myCanvas {
+            border: 1px solid #000;
+        }
+    </style>
 </head>
 <body>
 
-  <button id="myButton">Haz clic</button>
-  <canvas id="myCanvas" width="400" height="200"></canvas>
+<canvas id="myCanvas" width="600" height="400"></canvas>
 
-  <script>
-    document.getElementById('myButton').addEventListener('click', function() {
-      // Obtener el canvas y el contexto
-      var canvas = document.getElementById('myCanvas');
-      var ctx = canvas.getContext('2d');
+<script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
 
-      class circle{
-        constructor(x, y, radius, color, speed){
-          this.x = x;
-          this.y = y;
-          this.radius = radius;
-          this.color = color;
-          this.speed = speed;
-        }
-      }
+    canvas.addEventListener('click', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
 
-      // Configurar el círculo inicial
-      const circles = [
-        new circle(50,canvas / 8, 25, "red", 5),
-        new circle(50,canvas / 8, 25, "red", 5),
-        new circle(50,canvas / 8, 25, "red", 5),
-      ]
-      x = 50
-      // Función para dibujar el círculo
-      function drawCircle() {
-        ctx.beginPath();
-        ctx.arc(x, canvas/8, 25, 0, 2 * Math.PI);
-        ctx.fillStyle = "red";
-        ctx.fill();
-        ctx.closePath();
-      }
-
-      // Función para animar el círculo moviéndolo hacia la derecha
-      function animateCircle() {
-        // Limpiar el canvas en cada fotograma
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Dibujar el círculo en su posición actual
-        drawCircle();
-
-        // Mover el círculo hacia la derecha
-        x += 1;
-
-        // Solicitar el próximo fotograma de animación
-        requestAnimationFrame(animateCircle);
-      }
-
-      // Iniciar la animación
-      animateCircle();
+        drawWave(x, y);
     });
-  </script>
+
+    function drawWave(x, y) {
+        let radius = 0;
+        const maxRadius = 100;
+        const interval = setInterval(function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            radius += 2;
+            if (radius > maxRadius) clearInterval(interval);
+        }, 30);
+    }
+</script>
+
 </body>
 </html>

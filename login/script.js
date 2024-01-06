@@ -6,7 +6,6 @@ const form = document.getElementById('form1')
 form.addEventListener('submit', function (e){
     
     localStorage.setItem("user",`${input0.value}`)
-    localStorage.setItem("password",`${input1.value}`)
     let formData = new FormData(this);
 
     // Enviar los datos usando fetch
