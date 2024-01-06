@@ -10,6 +10,8 @@ const death = document.querySelector(".death")
 const death2 = document.querySelector(".deathScreen")
 const score = document.querySelector(".score")
 const username = document.querySelector(".name")
+let power = false;
+let radius;
 
 // Propiedades base de los meteoritos
 class AsteroidRocket{
@@ -39,6 +41,7 @@ class AsteroidRocket{
     this.speed = -speed
   }
 
+  asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 200 + 100)}
 }
 
 // Nave espacial
@@ -55,7 +58,7 @@ const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - M
 const asteroidDeath = new AsteroidRocket(canvas.width + 3000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideN2.png')
 const ToxiAsteroid = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideToxico.png')
 const asteroidElectric = new AsteroidRocket(canvas.width + 5000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/AsteroideEletrico.png')
-
+const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/Asteroide-Z.png')
 // Funciones para que se ejecute el programa
 const checkCollision = ()=> {
   for(const asteroid of asteroids){
@@ -63,12 +66,15 @@ const checkCollision = ()=> {
     const circleRadius = 30;
   
     // Calcula la distancia entre el centro del meteorito y el centro del cohete
-    const distancia1 = Math.sqrt( (asteroid.x - spaceship.x) ** 2 + (asteroid.y - spaceship.y) ** 2);
-    const distancia2 = Math.sqrt( (asteroidDeath.x - spaceship.x) ** 2 + (asteroidDeath.y  - spaceship.y) ** 2);
-    const distancia3 = Math.sqrt( (asteroidHealth.x - spaceship.x) ** 2 + (asteroidHealth.y - spaceship.y) ** 2);
-    const distancia4 = Math.sqrt( (ToxiAsteroid.x - spaceship.x) ** 2 + (ToxiAsteroid.y - spaceship.y) ** 2);
-    const distancia5 = Math.sqrt( (asteroidElectric.x - spaceship.x) ** 2 + (asteroidElectric.y - spaceship.y) ** 2);
-
+    const distancia1 = Math.sqrt((asteroid.x - spaceship.x) ** 2 + (asteroid.y - spaceship.y) ** 2);
+    const distancia2 = Math.sqrt((asteroidDeath.x - spaceship.x) ** 2 + (asteroidDeath.y  - spaceship.y) ** 2);
+    const distancia3 = Math.sqrt((asteroidHealth.x - spaceship.x) ** 2 + (asteroidHealth.y - spaceship.y) ** 2);
+    const distancia4 = Math.sqrt((ToxiAsteroid.x - spaceship.x) ** 2 + (ToxiAsteroid.y - spaceship.y) ** 2);
+    const distancia5 = Math.sqrt((asteroidElectric.x - spaceship.x) ** 2 + (asteroidElectric.y - spaceship.y) ** 2);
+    const distancia6 = Math.sqrt((Asteroid_z.x - spaceship.x) ** 2 + (Asteroid_z.y - spaceship.y) ** 2);
+    const ditances = asteroids.some(asteroid => {
+      return Math.sqrt((laserx - asteroid.x ) ** 2 + (lasery - asteroid.y ) ** 2) <= radius;
+  });
     // Si la distancia es menor que la suma de los radios, hay colisión
     if (distancia1 < meteoriteRadius + circleRadius) life.style.width = `${parseInt(life.offsetWidth) - 10}px`
     else if (distancia2 < meteoriteRadius + circleRadius) life.style.width = `0px`
@@ -84,6 +90,16 @@ const checkCollision = ()=> {
       setTimeout(()=>{spaceship.speed = 5},10000);
     }
     
+    else if(distancia6 < meteoriteRadius + circleRadius) power = true;
+
+    else if(ditances && permisio){
+      asteroid.asteroidx()
+      asteroidDeath.asteroidx()
+      asteroidHealth.asteroidx()
+      asteroidElectric.asteroidx()
+      ToxiAsteroid.asteroidx()    
+    }
+
     else if(life.offsetWidth == 0){
       death.style.display = "block"
       death2.style.display = "block"
@@ -97,18 +113,23 @@ const checkCollision = ()=> {
 let keyState = {};
 document.addEventListener("keydown", e => keyState[e.key] = true);
 document.addEventListener("keyup", e => keyState[e.key] = false);
-// const createLaser = ()=>{
-//   ctx2.clearRect(0,0, canvas.width, canvas.height)
-//   ctx2.beginPath();
-//   ctx2.arc(laserx, lasery, 8, 0, 2 * Math.PI);
-//   ctx2.fillStyle = "#3498db";
-//   ctx2.fill();
-//   ctx2.closePath();
-// }
-
-// const laserDisplacement = ()=>{
-//   laserx += 1
-// }
+let permisio = false;
+let laserx = canvas2.width / 8;
+let lasery = spaceship.y
+const createrLaser = ()=>{
+  radius = 0;
+  const maxRadius =1000;
+  const interval = setInterval(function() {
+      ctx3.clearRect(0, 0, canvas.width, canvas.height);
+      ctx3.beginPath();
+      ctx3.arc(laserx, lasery, radius, 0, 2 * Math.PI);
+      ctx3.lineWidth = 10
+      ctx3.strokeStyle = "#00715b"
+      ctx3.stroke();
+      radius += 10;
+      if (radius > maxRadius) clearInterval(interval);
+  }, 30);
+}
 
 function handleKeyboardInput() {
   if (keyState["ArrowUp"] && spaceship.y > 10) {
@@ -118,11 +139,15 @@ function handleKeyboardInput() {
     spaceship.y += spaceship.speed;
   }
 
-  // if(keyState[" "]){
-  //   createLaser();
-  //  laserDisplacement();
-  // }
-  // requestAnimationFrame(laserDisplacement)
+  if(keyState[" "] && power == true){
+    createrLaser()
+    permisio = true
+    lasery = spaceship.y
+    setTimeout(()=>{
+      power = false
+      permisio = false
+      ctx3.clearRect(0, 0, canvas.width, canvas.height)},1000)
+  }
 }
 
 // Funcion para mover los meteoritos
@@ -150,11 +175,16 @@ function updateMeteorite(){
       asteroidElectric.SpecialAsteroidDisplacement(300,2);
     }
 
+    else if(Asteroid_z.x < -50){
+      Asteroid_z.SpecialAsteroidDisplacement(10000,1)
+    }
+
     asteroid.x += asteroid.speed
     asteroidHealth.x += asteroidHealth.speed
     asteroidDeath.x += asteroidDeath.speed 
     ToxiAsteroid.x += ToxiAsteroid.speed
     asteroidElectric.x += asteroidElectric.speed
+    Asteroid_z.x += Asteroid_z.speed
   }
   handleKeyboardInput();
   spaceship.DrawAsteroid();
@@ -162,6 +192,7 @@ function updateMeteorite(){
   asteroidDeath.DrawAsteroid();
   ToxiAsteroid.DrawAsteroid();
   asteroidElectric.DrawAsteroid();
+  Asteroid_z.DrawAsteroid();
   checkCollision();
   requestAnimationFrame(updateMeteorite);
 }
@@ -180,7 +211,6 @@ reboot.addEventListener("click", function(){
       username: `${localStorage.getItem("user")}`,
       score: parseInt(score.textContent)
     }
-
 
     fetch("http://127.0.0.1:8000/score", {
       method: "post",
