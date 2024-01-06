@@ -120,16 +120,19 @@ document.addEventListener("keydown", e => keyState[e.key] = true);
 document.addEventListener("keyup", e => keyState[e.key] = false);
 let mobility = true;
 let laserx = canvas2.width / 8;
-let lasery = spaceship.y / 2
+let lasery = spaceship.y
 const createrLaser = ()=>{
-  ctx3.clearRect(0, 0, canvas.width, canvas.height)
-  ctx3.beginPath();
-  ctx3.arc(laserx, lasery, 30, 0, 2 * Math.PI);
-  ctx3.fillStyle = "#3498db";
-  ctx3.fill();
-  ctx3.closePath();
-  if(laserx < canvas.width + 5) laserx += 1
-  requestAnimationFrame(createrLaser)
+  let radius = 0;
+  const maxRadius = 900;
+  const interval = setInterval(function() {
+      ctx3.clearRect(0, 0, canvas.width, canvas.height);
+      ctx3.beginPath();
+      ctx3.arc(laserx, lasery, radius, 0, 2 * Math.PI);
+      ctx3.strokeStyle = "red"
+      ctx3.stroke();
+      radius += 10;
+      if (radius > maxRadius) clearInterval(interval);
+  }, 30);
 }
 
 

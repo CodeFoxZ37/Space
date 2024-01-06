@@ -1,60 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Animación de Onda</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    .cuadro {
-      width: 100px;
-      height: 100px;
-      background-color: #3498db;
-      border-radius: 8px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .onda {
-      position: absolute;
-      background: radial-gradient(circle, transparent 15%, rgba(102, 52, 219, 0.7) 70%);
-      transform: scale(0);
-      animation: onda-animacion 0.5s ease-out;
-    }
-
-    @keyframes onda-animacion {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
-    }
-  </style>
+    <title>Onda Expansiva en Canvas</title>
+    <style>
+        #myCanvas {
+            border: 1px solid #000;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="cuadro" onclick="onCuadroClick(this)">
-    <div class="onda"></div>
-  </div>
+<canvas id="myCanvas" width="600" height="400"></canvas>
 
-  <script>
-    function onCuadroClick(cuadro) {
-      const onda = document.createElement('div');
-      onda.classList.add('onda');
-      cuadro.appendChild(onda);
+<script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
 
-      setTimeout(() => {
-        onda.remove();
-      }, 5000);
+    // Objeto estático en el canvas
+    const staticObject = {
+        x: 300, // Posición X del objeto
+        y: 200, // Posición Y del objeto
+        width: 50, // Ancho del objeto
+        height: 50 // Alto del objeto
+    };
+
+    // Dibujar el objeto estático
+    function drawStaticObject() {
+        ctx.fillStyle = 'red';
+        ctx.fillRect(staticObject.x, staticObject.y, staticObject.width, staticObject.height);
     }
-  </script>
+
+    canvas.addEventListener('click', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        drawWave(x, y);
+    });
+
+    function drawWave(x, y) {
+        let radius = 0;
+        const maxRadius = 100;
+        const interval = setInterval(function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawStaticObject(); // Redibujar el objeto estático
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            // Verificar si la onda ha alcanzado el objeto
+            if (isColliding(x, y, radius, staticObject)) {
+                clearInterval(interval);
+            } else {
+                radius += 2;
+                if (radius > maxRadius) clearInterval(interval);
+            }
+        }, 30);
+    }
+
+    // Función para verificar la colisión
+    function isColliding(waveX, waveY, waveRadius, obj) {
+        // Distancia desde el centro de la onda hasta el borde más cercano del objeto
+        const distX = Math.abs(waveX - obj.x - obj.width / 2);
+        const distY = Math.abs(waveY - obj.y - obj.height / 2);
+
+        if (distX > (obj.width / 2 + waveRadius) || distY > (obj.height / 2 + waveRadius)) {
+            return false; // No hay colisión
+        }
+
+        if (distX <= (obj.width / 2) || distY <= (obj.height / 2)) {
+            return true; // Colisión detectada
+        }
+
+        // Verificar colisión en las esquinas del objeto
+        const dx = distX - obj.width / 2;
+        const dy = distY - obj.height / 2;
+        return (dx * dx + dy * dy <= (waveRadius * waveRadius));
+    }
+
+    drawStaticObject(); // Dibujar el objeto estático inicialmente
+</script>
 
 </body>
 </html>
