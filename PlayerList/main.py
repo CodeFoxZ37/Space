@@ -19,7 +19,7 @@ connection = mysql.connector.connect(
 app = FastAPI()
 
 @app.get("/")
-def info():
+async def info():
     cursor = connection.cursor()
     cursor.execute("SELECT User, Score FROM space_score ORDER BY Score DESC")
     results = cursor.fetchall()

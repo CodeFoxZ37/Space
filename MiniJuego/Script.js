@@ -55,9 +55,9 @@ const asteroids = [
   new AsteroidRocket(canvas.width + 220, canvas.height - Math.round(Math.random() * 250 + 80), -5,'image/asteroide.png'),
 ]
 const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideSalud.png')
-const asteroidDeath = new AsteroidRocket(canvas.width + 3000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideN2.png')
-const ToxiAsteroid = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideToxico.png')
-const asteroidElectric = new AsteroidRocket(canvas.width + 5000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/AsteroideEletrico.png')
+const asteroidDeath = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideN2.png')
+const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideToxico.png')
+const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/AsteroideEletrico.png')
 const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/Asteroide-Z.png')
 // Funciones para que se ejecute el programa
 const checkCollision = ()=> {
@@ -132,10 +132,10 @@ const createrLaser = ()=>{
 }
 
 function handleKeyboardInput() {
-  if (keyState["ArrowUp"] && spaceship.y > 10) {
+  if ((keyState["ArrowUp"] || keyState["w"])&& spaceship.y > 10) {
     spaceship.y -= spaceship.speed;
   }
-  if (keyState["ArrowDown"] && spaceship.y < 280) {
+  if ((keyState["ArrowDown"] || keyState["s"]) && spaceship.y < 280) {
     spaceship.y += spaceship.speed;
   }
 
@@ -223,10 +223,8 @@ reboot.addEventListener("click", function(){
     })
     .then(data => console.log('Success:', data))
     .catch(error => {
-      console.error('Fetch error:', error);
       console.log(error);
     });
   }
-  
-  location.reload();
+  setTimeout(()=> location.reload(),500)
 });
