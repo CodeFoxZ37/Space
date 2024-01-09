@@ -1,5 +1,6 @@
 body{
     background-image: url(image/fondo.png);
+    background-size: cover;
     margin: 0;
     color: #fff;
     font-family: monospace;
@@ -37,7 +38,6 @@ body{
 }
 
 .container{
-    background-color: rgba(0, 0, 0, 0.301);
     height: 40px;
     width: 100%;
 }

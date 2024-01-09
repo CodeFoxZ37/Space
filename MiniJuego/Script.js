@@ -15,10 +15,11 @@ let radius;
 
 // Propiedades base de los meteoritos
 class AsteroidRocket{
-  constructor(x,y,speed,image){
+  constructor(x,y,speed,endurance,image){
     this.x = x;
     this.y = y;
     this.speed = speed;
+    this.endurance = endurance;
     this.image = new Image();
     this.image.src = image;
   }
@@ -45,20 +46,20 @@ class AsteroidRocket{
 }
 
 // Nave espacial
-const spaceship = new AsteroidRocket(canvas2.width / 8,canvas2.height - 190,5,"image/astronave.png")
+const spaceship = new AsteroidRocket(canvas2.width / 8,canvas2.height - 190,5,0,"image/astronave.png")
 // Asteroides
 const asteroids = [
-  new AsteroidRocket(canvas.width + 200, canvas.height - Math.round(Math.random() * 250 + 80), -5,'image/asteroide.png'),
-  new AsteroidRocket(canvas.width + 210, canvas.height - Math.round(Math.random() * 250 + 80), -6,'image/asteroide.png'),
-  new AsteroidRocket(canvas.width + 215, canvas.height - Math.round(Math.random() * 250 + 80), -7,'image/asteroide.png'),
-  new AsteroidRocket(canvas.width + 280, canvas.height - Math.round(Math.random() * 250 + 80), -6,'image/asteroide.png'),
-  new AsteroidRocket(canvas.width + 220, canvas.height - Math.round(Math.random() * 250 + 80), -5,'image/asteroide.png'),
+  new AsteroidRocket(canvas.width + 200, canvas.height - Math.round(Math.random() * 250 + 80), -5,1,'image/asteroide.png'),
+  new AsteroidRocket(canvas.width + 210, canvas.height - Math.round(Math.random() * 250 + 80), -6,1,'image/asteroide.png'),
+  new AsteroidRocket(canvas.width + 215, canvas.height - Math.round(Math.random() * 250 + 80), -7,1,'image/asteroide.png'),
+  new AsteroidRocket(canvas.width + 280, canvas.height - Math.round(Math.random() * 250 + 80), -6,1,'image/asteroide.png'),
+  new AsteroidRocket(canvas.width + 220, canvas.height - Math.round(Math.random() * 250 + 80), -5,1,'image/asteroide.png'),
 ]
-const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideSalud.png')
-const asteroidDeath = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideN2.png')
-const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/asteroideToxico.png')
-const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/AsteroideEletrico.png')
-const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,'image/Asteroide-Z.png')
+const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,'image/asteroideSalud.png')
+const asteroidDeath = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,3,'image/asteroideN2.png')
+const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,'image/asteroideToxico.png')
+const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80),2, -1,'image/AsteroideEletrico.png')
+const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,'image/Asteroide-Z.png')
 // Funciones para que se ejecute el programa
 const checkCollision = ()=> {
   for(const asteroid of asteroids){
@@ -73,7 +74,7 @@ const checkCollision = ()=> {
     const distancia5 = Math.sqrt((asteroidElectric.x - spaceship.x) ** 2 + (asteroidElectric.y - spaceship.y) ** 2);
     const distancia6 = Math.sqrt((Asteroid_z.x - spaceship.x) ** 2 + (Asteroid_z.y - spaceship.y) ** 2);
     const ditances = asteroids.some(asteroid => {
-      return Math.sqrt((laserx - asteroid.x ) ** 2 + (lasery - asteroid.y ) ** 2) <= radius;
+      return Math.sqrt((radiox - asteroid.x ) ** 2 + (radioy - asteroid.y ) ** 2) <= radius;
   });
     // Si la distancia es menor que la suma de los radios, hay colisión
     if (distancia1 < meteoriteRadius + circleRadius) life.style.width = `${parseInt(life.offsetWidth) - 10}px`
@@ -104,7 +105,6 @@ const checkCollision = ()=> {
       death.style.display = "block"
       death2.style.display = "block"
       clearInterval(time);
-      scorenow = score.value
     }
   }
 }
@@ -114,15 +114,15 @@ let keyState = {};
 document.addEventListener("keydown", e => keyState[e.key] = true);
 document.addEventListener("keyup", e => keyState[e.key] = false);
 let permisio = false;
-let laserx = canvas2.width / 8;
-let lasery = spaceship.y
-const createrLaser = ()=>{
+let radiox = canvas2.width / 8;
+let radioy = spaceship.y
+const createrRadio = ()=>{
   radius = 0;
   const maxRadius =1000;
   const interval = setInterval(function() {
       ctx3.clearRect(0, 0, canvas.width, canvas.height);
       ctx3.beginPath();
-      ctx3.arc(laserx, lasery, radius, 0, 2 * Math.PI);
+      ctx3.arc(radiox, radioy, radius, 0, 2 * Math.PI);
       ctx3.lineWidth = 10
       ctx3.strokeStyle = "#00715b"
       ctx3.stroke();
@@ -140,9 +140,9 @@ function handleKeyboardInput() {
   }
 
   if(keyState[" "] && power == true){
-    createrLaser()
+    createrRadio()
     permisio = true
-    lasery = spaceship.y
+    radioy = spaceship.y
     setTimeout(()=>{
       power = false
       permisio = false
