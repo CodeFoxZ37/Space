@@ -12,6 +12,7 @@ const score = document.querySelector(".score")
 const username = document.querySelector(".name")
 let power = false;
 let radius;
+const energy = [];
 
 // Propiedades base de los meteoritos
 class AsteroidRocket{
@@ -109,6 +110,24 @@ const checkCollision = ()=> {
   }
 }
 
+function drawLaser(x, y) {
+  ctx3.beginPath();
+  ctx3.arc(x, y, 10, 0, 2 * Math.PI);
+  ctx3.fillStyle = 'red';
+  ctx3.fill();
+  ctx3.closePath();
+}
+
+function update() {
+  ctx3.clearRect(0,0,canvas.width,canvas.height)
+  for (let i = 0; i < energy.length; i++) {
+    energy[i].x += energy[i].speed;
+    drawLaser(energy[i].x, energy[i].y);
+  }
+
+  requestAnimationFrame(update);
+}
+
 // Controles
 let keyState = {};
 document.addEventListener("keydown", e => keyState[e.key] = true);
@@ -148,6 +167,11 @@ function handleKeyboardInput() {
       permisio = false
       ctx3.clearRect(0, 0, canvas.width, canvas.height)},1000)
   }
+
+  else if(keyState[" "] && permisio == false) setTimeout(()=>{
+    const newEnergy = { x: canvas3.width / 5.4, y: spaceship.y + 30, speed: 5};
+    energy.push(newEnergy);
+  },100)
 }
 
 // Funcion para mover los meteoritos
@@ -194,6 +218,7 @@ function updateMeteorite(){
   asteroidElectric.DrawAsteroid();
   Asteroid_z.DrawAsteroid();
   checkCollision();
+  
   requestAnimationFrame(updateMeteorite);
 }
 
@@ -203,7 +228,8 @@ const writename = ()=>{
 }
 
 // inicio del movimiento de los meteoritos
-updateMeteorite(); 
+updateMeteorite();
+update(); 
 writename()
 reboot.addEventListener("click", function(){
   if(localStorage.getItem("user") !== null){
