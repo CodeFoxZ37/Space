@@ -13,6 +13,7 @@ const username = document.querySelector(".name")
 let power = false;
 let radius;
 const energy = [];
+let canAddEnergy = true;
 
 // Propiedades base de los meteoritos
 class AsteroidRocket{
@@ -75,8 +76,10 @@ const checkCollision = ()=> {
     const distancia5 = Math.sqrt((asteroidElectric.x - spaceship.x) ** 2 + (asteroidElectric.y - spaceship.y) ** 2);
     const distancia6 = Math.sqrt((Asteroid_z.x - spaceship.x) ** 2 + (Asteroid_z.y - spaceship.y) ** 2);
     const ditances = asteroids.some(asteroid => {
-      return Math.sqrt((radiox - asteroid.x ) ** 2 + (radioy - asteroid.y ) ** 2) <= radius;
-  });
+      return Math.sqrt((radiox - asteroid.x ) ** 2 + (radioy - asteroid.y ) ** 2) <= radius;});
+    const ditances2 = asteroids.some(asteroid => {
+      return Math.sqrt((canAddEnergy.x - asteroid.x ) ** 2 + (canAddEnergy.y - asteroid.y ) ** 2) <= radius;
+    });
     // Si la distancia es menor que la suma de los radios, hay colisión
     if (distancia1 < meteoriteRadius + circleRadius) life.style.width = `${parseInt(life.offsetWidth) - 10}px`
     else if (distancia2 < meteoriteRadius + circleRadius) life.style.width = `0px`
@@ -168,10 +171,12 @@ function handleKeyboardInput() {
       ctx3.clearRect(0, 0, canvas.width, canvas.height)},1000)
   }
 
-  else if(keyState[" "] && permisio == false) setTimeout(()=>{
+  else if(keyState[" "] && canAddEnergy){
+    canAddEnergy = false
     const newEnergy = { x: canvas3.width / 5.4, y: spaceship.y + 30, speed: 5};
     energy.push(newEnergy);
-  },100)
+    setTimeout(()=> canAddEnergy = true,300)
+  }
 }
 
 // Funcion para mover los meteoritos
