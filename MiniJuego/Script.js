@@ -44,7 +44,14 @@ class AsteroidRocket{
     this.speed = -speed
   }
 
-  asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 200 + 100)}
+  asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 300 + 100)}
+
+  lifeAsteroid(){
+    this.endurance - 1
+    if(this.endurance == 0){
+      this.asteroidx()
+    }
+  }
 }
 
 // Nave espacial
@@ -78,7 +85,7 @@ const checkCollision = ()=> {
     const ditances = asteroids.some(asteroid => {
       return Math.sqrt((radiox - asteroid.x ) ** 2 + (radioy - asteroid.y ) ** 2) <= radius;});
     const ditances2 = asteroids.some(asteroid => {
-      return Math.sqrt((canAddEnergy.x - asteroid.x ) ** 2 + (canAddEnergy.y - asteroid.y ) ** 2) <= radius;
+      return Math.sqrt((energy.x - asteroid.x ) ** 2 + (energy.y - asteroid.y ) ** 2) <= radius;
     });
     // Si la distancia es menor que la suma de los radios, hay colisión
     if (distancia1 < meteoriteRadius + circleRadius) life.style.width = `${parseInt(life.offsetWidth) - 10}px`
@@ -105,6 +112,15 @@ const checkCollision = ()=> {
       ToxiAsteroid.asteroidx()    
     }
 
+    else if(ditances2){
+      asteroid.lifeAsteroid()
+      asteroidDeath.lifeAsteroid()
+      asteroidHealth.lifeAsteroid()
+      asteroidElectric.lifeAsteroid()
+      ToxiAsteroid.lifeAsteroid()
+      Asteroid_z.lifeAsteroid()
+    }
+
     else if(life.offsetWidth == 0){
       death.style.display = "block"
       death2.style.display = "block"
@@ -115,8 +131,8 @@ const checkCollision = ()=> {
 
 function drawLaser(x, y) {
   ctx3.beginPath();
-  ctx3.arc(x, y, 10, 0, 2 * Math.PI);
-  ctx3.fillStyle = 'red';
+  ctx3.arc(x, y, 8, 0, 2 * Math.PI);
+  ctx3.fillStyle = 'orange';
   ctx3.fill();
   ctx3.closePath();
 }
@@ -258,4 +274,4 @@ reboot.addEventListener("click", function(){
     });
   }
   setTimeout(()=> location.reload(),500)
-});
+}); 
