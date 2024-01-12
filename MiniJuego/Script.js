@@ -47,7 +47,7 @@ class AsteroidRocket{
   asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 300 + 100)}
 
   lifeAsteroid(){
-    this.endurance - 1
+    this.endurance -= 1
     if(this.endurance == 0){
       this.asteroidx()
     }
@@ -84,9 +84,7 @@ const checkCollision = ()=> {
     const distancia6 = Math.sqrt((Asteroid_z.x - spaceship.x) ** 2 + (Asteroid_z.y - spaceship.y) ** 2);
     const ditances = asteroids.some(asteroid => {
       return Math.sqrt((radiox - asteroid.x ) ** 2 + (radioy - asteroid.y ) ** 2) <= radius;});
-    const ditances2 = asteroids.some(asteroid => {
-      return Math.sqrt((energy.x - asteroid.x ) ** 2 + (energy.y - asteroid.y ) ** 2) <= radius;
-    });
+    
     // Si la distancia es menor que la suma de los radios, hay colisión
     if (distancia1 < meteoriteRadius + circleRadius) life.style.width = `${parseInt(life.offsetWidth) - 10}px`
     else if (distancia2 < meteoriteRadius + circleRadius) life.style.width = `0px`
@@ -112,16 +110,24 @@ const checkCollision = ()=> {
       ToxiAsteroid.asteroidx()    
     }
 
-    else if(ditances2){
-      asteroid.lifeAsteroid()
-      asteroidDeath.lifeAsteroid()
-      asteroidHealth.lifeAsteroid()
-      asteroidElectric.lifeAsteroid()
-      ToxiAsteroid.lifeAsteroid()
-      Asteroid_z.lifeAsteroid()
+    for (let i = 0; i < energy.length; i++) {
+      const distanceToLaser = Math.sqrt((energy[i].x - asteroid.x) ** 2 + (energy[i].y - asteroid.y) ** 2);
+      const laserRadius = 8;
+    
+      if (distanceToLaser < laserRadius + meteoriteRadius) {
+        // Colisión entre láser y asteroide
+        energy.splice(i, 1); // Eliminar el láser
+        asteroid.lifeAsteroid(); // Reducir la resistencia del asteroide
+    
+        if (asteroid.endurance === 0) {
+          // Si la resistencia del asteroide llega a cero, reinicializar su posición
+          asteroid.asteroidx();
+        }
+        break; // Salir del bucle de láseres después de una colisión
+      }
     }
 
-    else if(life.offsetWidth == 0){
+     if(life.offsetWidth == 0){
       death.style.display = "block"
       death2.style.display = "block"
       clearInterval(time);
