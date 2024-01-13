@@ -32,20 +32,33 @@ async def info():
 async def form(username: str = Form(...), password: str = Form(...)):
     try:
         cursor = connection.cursor()
-        query = "INSERT INTO Users(User, Password) VALUES (%s, %s)"
-        values = (username, password)
-        cursor.execute(query, values)
+        query_user_existence = "SELECT COUNT(*) FROM Users WHERE User = %s"
+        cursor.execute(query_user_existence, (username,))
+        (user_count,) = cursor.fetchone()  # Obtiene el resultado de la consulta
 
-        query2 = "INSERT INTO space_score(User, Score) VALUES (%s, 0)"
-        values2 = (username,)
-        cursor.execute(query2,values2)
-        connection.commit()
+        if user_count > 0:
+            query_password = "SELECT Password FROM Users WHERE User = %s"
+            cursor.execute(query_password, (username,))
+            (stored_password,) = cursor.fetchone()  # Obtiene la contraseña almacenada
+
+            if stored_password == password:
+                return {"message": True}
+            else:
+                return {"message": False}
+        else:
+            # Si el usuario no existe, añádelo
+            query_add_user = "INSERT INTO Users(User, Password) VALUES (%s, %s)"
+            cursor.execute(query_add_user, (username, password))
+
+            query_add_score = "INSERT INTO space_score(User, Score) VALUES (%s, 0)"
+            cursor.execute(query_add_score, (username,))
+            connection.commit()
+            return {"message": "Usuario añadido con éxito"}
     except mysql.connector.Error as err:
         print(f"Hubo un error: {err}")
         return {"error": str(err)}
     finally:
         cursor.close()
-    return {"message": "Usuario añadido con éxito"}
 
 @app.post("/score")
 async def update(item: Item):

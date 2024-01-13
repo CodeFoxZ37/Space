@@ -2,9 +2,10 @@ const input0 = document.querySelector(".input0")
 const input1 = document.querySelector(".input1")
 const alm = document.querySelector(".alm")
 const form = document.getElementById('form1')
+const message = document.querySelector(".message")
 
 form.addEventListener('submit', function (e){
-    
+    e.preventDefault()
     localStorage.setItem("user",`${input0.value}`)
     let formData = new FormData(this);
 
@@ -15,11 +16,14 @@ form.addEventListener('submit', function (e){
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data); // Manejar la respuesta JSON aquí
+        if(data.message == false){
+            message.style.display = "grid"
+            message.innerHTML = "La contraseña es incorrecta"
+        }
+        else window.open("../MiniJuego/index.html"); 
     })
     .catch(error => {
         console.error('Error:', error);
     });
 
-    window.open("../MiniJuego/index.html"); 
 })
