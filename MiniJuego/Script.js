@@ -97,7 +97,7 @@ const checkCollision = ()=> {
     }
     else if (distancia5 < meteoriteRadius + circleRadius){
       spaceship.speed = 1;
-      setTimeout(()=>{spaceship.speed = 5},10000);
+      setTimeout(()=> spaceship.speed = 5,10000);
     }
     
     else if(distancia6 < meteoriteRadius + circleRadius) power = true;
