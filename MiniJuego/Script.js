@@ -70,70 +70,70 @@ const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Mat
 const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80),2, -1,'image/AsteroideEletrico.png')
 const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,'image/Asteroide-Z.png')
 // Funciones para que se ejecute el programa
-const checkCollision = ()=> {
-  for(const asteroid of asteroids){
-    const meteoriteRadius = 6
+const checkCollision = () => {
+  for (const asteroid of asteroids) {
+    const meteoriteRadius = 6;
     const circleRadius = 30;
-  
-    // Calcula la distancia entre el centro del meteorito y el centro del cohete
+
     const distancia1 = Math.sqrt((asteroid.x - spaceship.x) ** 2 + (asteroid.y - spaceship.y) ** 2);
-    const distancia2 = Math.sqrt((asteroidDeath.x - spaceship.x) ** 2 + (asteroidDeath.y  - spaceship.y) ** 2);
+    const distancia2 = Math.sqrt((asteroidDeath.x - spaceship.x) ** 2 + (asteroidDeath.y - spaceship.y) ** 2);
     const distancia3 = Math.sqrt((asteroidHealth.x - spaceship.x) ** 2 + (asteroidHealth.y - spaceship.y) ** 2);
     const distancia4 = Math.sqrt((ToxiAsteroid.x - spaceship.x) ** 2 + (ToxiAsteroid.y - spaceship.y) ** 2);
     const distancia5 = Math.sqrt((asteroidElectric.x - spaceship.x) ** 2 + (asteroidElectric.y - spaceship.y) ** 2);
     const distancia6 = Math.sqrt((Asteroid_z.x - spaceship.x) ** 2 + (Asteroid_z.y - spaceship.y) ** 2);
-    const ditances = asteroids.some(asteroid => {
-      return Math.sqrt((radiox - asteroid.x ) ** 2 + (radioy - asteroid.y ) ** 2) <= radius;});
-    
-    // Si la distancia es menor que la suma de los radios, hay colisión
-    if (distancia1 < meteoriteRadius + circleRadius) life.style.width = `${parseInt(life.offsetWidth) - 10}px`
-    else if (distancia2 < meteoriteRadius + circleRadius) life.style.width = `0px`
-    else if (distancia3 < meteoriteRadius + circleRadius && life.offsetWidth < 300) life.style.width = `${parseInt(life.offsetWidth) + 1}px`
-    else if (distancia4 < meteoriteRadius + circleRadius){
-      let toxic = setInterval(()=>{life.style.width = `${parseInt(life.offsetWidth) - 1}px`},3000)
-      life.style.background = "#6C1292"
-      setTimeout(()=>{clearInterval(toxic)
-        life.style.background = ""},7000)
-    }
-    else if (distancia5 < meteoriteRadius + circleRadius){
+    const ditances = asteroids.some((otherAsteroid) => {
+      return (
+        otherAsteroid !== asteroid &&
+        Math.sqrt((otherAsteroid.x - asteroid.x) ** 2 + (otherAsteroid.y - asteroid.y) ** 2) <= 2 * circleRadius
+      );
+    });
+
+    if (distancia1 < meteoriteRadius + circleRadius) life.style.width = `${parseInt(life.offsetWidth) - 10}px`;
+    else if (distancia2 < meteoriteRadius + circleRadius) life.style.width = `0px`;
+    else if (distancia3 < meteoriteRadius + circleRadius && life.offsetWidth < 300) life.style.width = `${parseInt(life.offsetWidth) + 1}px`;
+    else if (distancia4 < meteoriteRadius + circleRadius) {
+      let toxic = setInterval(() => { life.style.width = `${parseInt(life.offsetWidth) - 1}px`; }, 3000);
+      life.style.background = "#6C1292";
+      setTimeout(() => {
+        clearInterval(toxic);
+        life.style.background = "";
+      }, 7000);
+    } else if (distancia5 < meteoriteRadius + circleRadius) {
       spaceship.speed = 1;
-      setTimeout(()=> spaceship.speed = 5,10000);
-    }
-    
-    else if(distancia6 < meteoriteRadius + circleRadius) power = true;
+      setTimeout(() => (spaceship.speed = 5), 10000);
+    } else if (distancia6 < meteoriteRadius + circleRadius) power = true;
 
-    else if(ditances && permisio){
-      asteroid.asteroidx()
-      asteroidDeath.asteroidx()
-      asteroidHealth.asteroidx()
-      asteroidElectric.asteroidx()
-      ToxiAsteroid.asteroidx()    
+    else if (ditances && permisio) {
+      asteroid.asteroidx();
+      asteroidDeath.asteroidx();
+      asteroidHealth.asteroidx();
+      asteroidElectric.asteroidx();
+      ToxiAsteroid.asteroidx();
     }
 
-    for (let i = 0; i < energy.length; i++) {
+    for (let i = energy.length - 1; i >= 0; i--) {
       const distanceToLaser = Math.sqrt((energy[i].x - asteroid.x) ** 2 + (energy[i].y - asteroid.y) ** 2);
       const laserRadius = 8;
-    
+
       if (distanceToLaser < laserRadius + meteoriteRadius) {
-        // Colisión entre láser y asteroide
-        energy.splice(i, 1); // Eliminar el láser
-        asteroid.lifeAsteroid(); // Reducir la resistencia del asteroide
-    
+        energy.splice(i, 1);
+        asteroid.lifeAsteroid();
+
         if (asteroid.endurance === 0) {
-          // Si la resistencia del asteroide llega a cero, reinicializar su posición
           asteroid.asteroidx();
         }
-        break; // Salir del bucle de láseres después de una colisión
+        break;
       }
     }
 
-     if(life.offsetWidth == 0){
-      death.style.display = "block"
-      death2.style.display = "block"
+    if (life.offsetWidth == 0) {
+      death.style.display = "block";
+      death2.style.display = "block";
       clearInterval(time);
     }
   }
-}
+};
+
 
 function drawLaser(x, y) {
   ctx3.beginPath();
