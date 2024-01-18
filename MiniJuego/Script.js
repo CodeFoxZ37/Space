@@ -112,20 +112,28 @@ const checkCollision = () => {
     }
 
     for (let i = energy.length - 1; i >= 0; i--) {
-      const distanceToLaser = Math.sqrt((energy[i].x - asteroid.x) ** 2 + (energy[i].y - asteroid.y) ** 2);
       const laserRadius = 8;
+
+      // Ajustar las coordenadas para tener en cuenta el tamaño de las imágenes
+      const laserX = energy[i].x + laserRadius / 2;
+      const laserY = energy[i].y + laserRadius / 2;
+
+      const asteroidCenterX = asteroid.x + asteroid.image.width / 2;
+      const asteroidCenterY = asteroid.y + asteroid.image.height / 2;
+
+      const distanceToLaser = Math.sqrt((laserX - asteroidCenterX) ** 2 + (laserY - asteroidCenterY) ** 2);
 
       if (distanceToLaser < laserRadius + meteoriteRadius) {
         energy.splice(i, 1);
         asteroid.lifeAsteroid();
 
-        if (asteroid.endurance === 0) {
-          asteroid.asteroidx();
-        }
-        break;
+        // Modificación: Verificar si el asteroide aún tiene resistencia antes de reiniciarlo
+        if (asteroid.endurance === 0) asteroid.asteroidx()
+        break;  // Termina el bucle al encontrar la primera colisión, ya que un láser solo puede afectar a un asteroide.
       }
     }
 
+  
     if (life.offsetWidth == 0) {
       death.style.display = "block";
       death2.style.display = "block";
