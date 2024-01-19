@@ -47,9 +47,11 @@ class AsteroidRocket{
   asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 300 + 100)}
 
   lifeAsteroid(){
+    let value = this.endurance
     this.endurance -= 1
     if(this.endurance == 0){
       this.asteroidx()
+      this.endurance = value
     }
   }
 }
@@ -124,11 +126,12 @@ const checkCollision = () => {
       const distanceToLaser = Math.sqrt((laserX - asteroidCenterX) ** 2 + (laserY - asteroidCenterY) ** 2);
 
       if (distanceToLaser < laserRadius + meteoriteRadius) {
+        console.log('Colisión detectada:', asteroid, energy[i])
         energy.splice(i, 1);
         asteroid.lifeAsteroid();
 
         // Modificación: Verificar si el asteroide aún tiene resistencia antes de reiniciarlo
-        if (asteroid.endurance === 0) asteroid.asteroidx()
+        if (asteroid.endurance > 0) asteroid.asteroidx()
         break;  // Termina el bucle al encontrar la primera colisión, ya que un láser solo puede afectar a un asteroide.
       }
     }
