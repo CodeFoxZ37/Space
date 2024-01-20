@@ -44,7 +44,7 @@ class AsteroidRocket{
     this.speed = -speed
   }
 
-  asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 300 + 100)}
+  asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 500 + 100)}
 
   lifeAsteroid(){
     let value = this.endurance
@@ -73,7 +73,15 @@ const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height -
 const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,'image/Asteroide-Z.png')
 // Funciones para que se ejecute el programa
 const checkCollision = () => {
-  for (const asteroid of asteroids) {
+  const allAsteroids = asteroids.concat(
+    asteroidDeath, 
+    asteroidHealth, 
+    asteroidElectric, 
+    ToxiAsteroid, 
+    Asteroid_z
+  );
+
+  for (const asteroid of allAsteroids) {
     const meteoriteRadius = 6;
     const circleRadius = 30;
 
