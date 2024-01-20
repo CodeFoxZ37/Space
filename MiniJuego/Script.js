@@ -1,10 +1,12 @@
-const life = document.querySelector(".life2")
 const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d");
 const canvas2 = document.getElementById("canvas2")
 const ctx2 = canvas2.getContext("2d");
 const canvas3 = document.getElementById("canvas3")
 const ctx3 = canvas3.getContext("2d");
+const canvas4 = document.getElementById("canvas4")
+const ctx4 = canvas4.getContext("2d");
+const life = document.querySelector(".life2")
 const reboot = document.querySelector(".reboot")
 const death = document.querySelector(".death")
 const death2 = document.querySelector(".deathScreen")
@@ -60,8 +62,8 @@ const asteroids = [
 const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,'image/asteroideSalud.png')
 const asteroidDeath = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,3,'image/asteroideN2.png')
 const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,'image/asteroideToxico.png')
-const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80),2, -1,'image/AsteroideEletrico.png')
-const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,'image/Asteroide-Z.png')
+const asteroidElectric = new AsteroidRocket(canvas.width + 9500, canvas.height - Math.round(Math.random() * 250 + 80),-1,2,'image/AsteroideEletrico.png')
+const Asteroid_z = new AsteroidRocket(canvas.width + 11000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,'image/Asteroide-Z.png')
 // Funciones para que se ejecute el programa
 const checkCollision = ()=> {
   for(const asteroid of asteroids){
@@ -121,14 +123,14 @@ function drawLaser(x, y) {
   ctx3.closePath();
 }
 
-function update() {
+function updateLaser() {
   ctx3.clearRect(0,0,canvas.width,canvas.height)
   for (let i = 0; i < energy.length; i++) {
     energy[i].x += energy[i].speed;
     drawLaser(energy[i].x, energy[i].y);
   }
 
-  requestAnimationFrame(update);
+  requestAnimationFrame(updateLaser);
 }
 
 // Controles
@@ -136,18 +138,18 @@ let keyState = {};
 document.addEventListener("keydown", e => keyState[e.key] = true);
 document.addEventListener("keyup", e => keyState[e.key] = false);
 let permisio = false;
-let radiox = canvas2.width / 8;
-let radioy = spaceship.y
+let radiox = canvas4.width / 8;
+let radioy = spaceship.y;
 const createrRadio = ()=>{
   radius = 0;
   const maxRadius =1000;
   const interval = setInterval(function() {
-      ctx3.clearRect(0, 0, canvas.width, canvas.height);
-      ctx3.beginPath();
-      ctx3.arc(radiox, radioy, radius, 0, 2 * Math.PI);
-      ctx3.lineWidth = 10
-      ctx3.strokeStyle = "#00715b"
-      ctx3.stroke();
+      ctx4.clearRect(0, 0, canvas.width, canvas.height);
+      ctx4.beginPath();
+      ctx4.arc(radiox, radioy, radius, 0, 2 * Math.PI);
+      ctx4.lineWidth = 10
+      ctx4.strokeStyle = "#00715b"
+      ctx4.stroke();
       radius += 10;
       if (radius > maxRadius) clearInterval(interval);
   }, 30);
@@ -164,7 +166,7 @@ function handleKeyboardInput() {
   if(keyState[" "] && power == true){
     createrRadio()
     permisio = true
-    radioy = spaceship.y
+    radioy = spaceship.y + 30
     setTimeout(()=>{
       power = false
       permisio = false
@@ -234,7 +236,7 @@ const writename = ()=>{
 
 // inicio del movimiento de los meteoritos
 updateMeteorite();
-update(); 
+updateLaser(); 
 writename()
 reboot.addEventListener("click", function(){
   if(localStorage.getItem("user") !== null){
@@ -244,7 +246,7 @@ reboot.addEventListener("click", function(){
     }
 
     fetch("http://127.0.0.1:8000/score", {
-      method: "post",
+      method: "put",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })

@@ -7,7 +7,8 @@ fetch("http://127.0.0.1:8000/")
         let arrayScore = data.score.split(",")
         let number = 1;
         arrayUser.forEach((values,index) => {
-            let htmlCode = `<div class="users">
+            let userClass = values === `${localStorage.getItem("user")}` ? "user" : "users";  
+            let htmlCode = `<div class="${userClass}">
             <b class="number">${number}</b>
             <b class="name">${values}</b>
             <b class="score">${arrayScore[index].toString().padStart(6, '0')}</b>

@@ -14,11 +14,11 @@ body{
     border: solid 3px white;
     border-radius: 5px;
     position: absolute;
-    width: 50%;
-    height: 570px;
+    width: 45%;
+    height: 85%;
     overflow-y: scroll;
 
-    .users{
+    .users, .user{
         margin: 0 auto;
         margin-top: 10px;
         background-color: #fff;
@@ -29,6 +29,12 @@ body{
         font-size: 170%;
         box-shadow: 0px 4px #007740;
     }
+
+    .user{
+        color: #ffcc00;
+        box-shadow: 0px 4px #ebbc00;
+    }
+
     b{
         display: inline-block;
     }

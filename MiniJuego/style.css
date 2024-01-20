@@ -55,7 +55,7 @@ body{
     }
 }
 
-#canvas, #canvas2, #canvas3{
+canvas{
     position: absolute;
     margin: 150px 100px;
     border: solid  4px white;

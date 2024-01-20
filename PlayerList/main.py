@@ -60,7 +60,7 @@ async def form(username: str = Form(...), password: str = Form(...)):
     finally:
         cursor.close()
 
-@app.post("/score")
+@app.put("/score")
 async def update(item: Item):
  try:
      cursor = connection.cursor()
