@@ -245,7 +245,7 @@ reboot.addEventListener("click", function(){
       score: parseInt(score.textContent)
     }
 
-    fetch("http://127.0.0.1:8000/score", {
+    fetch("http://0.0.0.0:8000/score", {
       method: "put",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
