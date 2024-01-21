@@ -72,16 +72,19 @@ const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Mat
 const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80),2, -1,'image/AsteroideEletrico.png')
 const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,'image/Asteroide-Z.png')
 // Funciones para que se ejecute el programa
-const checkCollision = () => {
-  const allAsteroids = asteroids.concat(
-    asteroidDeath, 
-    asteroidHealth, 
-    asteroidElectric, 
-    ToxiAsteroid, 
-    Asteroid_z
-  );
 
-  for (const asteroid of allAsteroids) {
+const AllAsteroids = [
+  ...asteroids,
+  asteroidHealth,
+  asteroidDeath,
+  ToxiAsteroid,
+  asteroidElectric,
+  Asteroid_z
+]
+
+const checkCollision = () => {
+
+  for (const asteroid of asteroids) {
     const meteoriteRadius = 6;
     const circleRadius = 30;
 
@@ -132,7 +135,7 @@ const checkCollision = () => {
       const asteroidCenterY = asteroid.y + asteroid.image.height / 2;
 
       const distanceToLaser = Math.sqrt((laserX - asteroidCenterX) ** 2 + (laserY - asteroidCenterY) ** 2);
-
+      
       if (distanceToLaser < laserRadius + meteoriteRadius) {
         console.log('Colisión detectada:', asteroid, energy[i])
         energy.splice(i, 1);
@@ -214,7 +217,7 @@ function handleKeyboardInput() {
 
   else if(keyState[" "] && canAddEnergy){
     canAddEnergy = false
-    const newEnergy = { x: canvas3.width / 5.4, y: spaceship.y + 30, speed: 5};
+    const newEnergy = { x: canvas3.width / 5.4, y: spaceship.y + 30, speed: 7};
     energy.push(newEnergy);
     setTimeout(()=> canAddEnergy = true,300)
   }
