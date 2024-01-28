@@ -10,7 +10,7 @@ const death = document.querySelector(".death");
 const death2 = document.querySelector(".deathScreen");
 const score = document.querySelector(".score");
 const username = document.querySelector(".name");
-const energy2 = document.querySelector("energy2");
+const energy2 = document.querySelector(".energy2");
 
 let power = false;
 let radius;
@@ -70,10 +70,11 @@ const asteroids = [
   new AsteroidRocket(canvas.width + 220, canvas.height - Math.round(Math.random() * 250 + 80), -5,1,"normal",'image/asteroide.png'),
 ]
 const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,"special",'image/asteroideSalud.png')
-const asteroidDeath = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,300,"special",'image/asteroideN2.png')
+const asteroidDeath = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,3,"special",'image/asteroideN2.png')
 const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,"special",'image/asteroideToxico.png')
 const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80),-1, 2,"special",'image/AsteroideEletrico.png')
 const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/Asteroide-Z.png')
+const asteroideEnergy = new AsteroidRocket(canvas.width + 1000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,"special",'image/AsteroideEnergia.png')
 // Funciones para que se ejecute el programa
 
 const AllAsteroids = [
@@ -82,7 +83,8 @@ const AllAsteroids = [
   asteroidDeath,
   ToxiAsteroid,
   asteroidElectric,
-  Asteroid_z
+  Asteroid_z,
+  asteroideEnergy
 ]
 
 const checkCollision = () => {
@@ -105,7 +107,7 @@ const checkCollision = () => {
     });
 
     if (distancia1 < meteoriteRadius + circleRadius && asteroid.type == "normal") life.style.width = `${parseInt(life.offsetWidth) - 10}px`;
-    else if (distancia2 < meteoriteRadius + circleRadius) console.log(asteroidDeath.endurance);
+    else if (distancia2 < meteoriteRadius + circleRadius) life.style.width = "0px";
     else if (distancia3 < meteoriteRadius + circleRadius && life.offsetWidth < 300) life.style.width = `${parseInt(life.offsetWidth) + 1}px`;
     else if (distancia4 < meteoriteRadius + circleRadius) {
       let toxic = setInterval(() => { life.style.width = `${parseInt(life.offsetWidth) - 1}px`; }, 3000);
@@ -142,7 +144,6 @@ const checkCollision = () => {
       if(laserX > 1100) energy.splice(i, 1)
 
       if (distanceToLaser < laserRadius + meteoriteRadius) {
-        console.log('Colisión detectada:', asteroid, energy[i])
         energy.splice(i, 1);
         asteroid.lifeAsteroid();
 
@@ -159,11 +160,10 @@ const checkCollision = () => {
   }
 };
 
-
 function drawLaser(x, y) {
   ctx3.beginPath();
   ctx3.arc(x, y, 8, 0, 2 * Math.PI);
-  ctx3.fillStyle = 'orange';
+  ctx3.fillStyle = '#f68d04';
   ctx3.fill();
   ctx3.closePath();
 }
@@ -174,7 +174,6 @@ function update() {
     energy[i].x += energy[i].speed;
     drawLaser(energy[i].x, energy[i].y);
   }
-
   requestAnimationFrame(update);
 }
 
@@ -218,9 +217,10 @@ function handleKeyboardInput() {
       ctx3.clearRect(0, 0, canvas.width, canvas.height)},1000)
   }
 
-  else if(keyState[" "] && canAddEnergy){
+  else if(keyState[" "] && canAddEnergy && energy2.offsetWidth > 4){
     canAddEnergy = false
-    energy2.style.width = `${parseInt(energy2.offsetWidth) - 10}px`
+    energy2.style.width = `${parseInt(energy2.offsetWidth) - 37.2}px`
+   
     const newEnergy = { x: canvas3.width / 5.4, y: spaceship.y + 30, speed: 7};
     energy.push(newEnergy);
     setTimeout(()=> canAddEnergy = true,300)
@@ -256,12 +256,17 @@ function updateMeteorite(){
       Asteroid_z.SpecialAsteroidDisplacement(10000,1)
     }
 
+    else if(asteroideEnergy.x < -50){
+      asteroideEnergy.SpecialAsteroidDisplacement(700,1)
+    }
+
     asteroid.x += asteroid.speed
     asteroidHealth.x += asteroidHealth.speed
     asteroidDeath.x += asteroidDeath.speed 
     ToxiAsteroid.x += ToxiAsteroid.speed
     asteroidElectric.x += asteroidElectric.speed
     Asteroid_z.x += Asteroid_z.speed
+    asteroideEnergy.x += asteroideEnergy.speed
   }
   handleKeyboardInput();
   spaceship.DrawAsteroid();
@@ -270,6 +275,7 @@ function updateMeteorite(){
   ToxiAsteroid.DrawAsteroid();
   asteroidElectric.DrawAsteroid();
   Asteroid_z.DrawAsteroid();
+  asteroideEnergy.DrawAsteroid();
   checkCollision();
   
   requestAnimationFrame(updateMeteorite);
