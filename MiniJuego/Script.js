@@ -12,6 +12,7 @@ const death = document.querySelector(".death")
 const death2 = document.querySelector(".deathScreen")
 const score = document.querySelector(".score")
 const username = document.querySelector(".name")
+const login = document.querySelector(".login")
 let power = false;
 let radius;
 const energy = [];
@@ -231,7 +232,11 @@ function updateMeteorite(){
 
 const writename = ()=>{
   let name = localStorage.getItem("user")
-  username.textContent = `${name}`
+  if(name != null){
+    username.style.display = "inline-block"
+    login.style.display = "none"
+    username.textContent = `${name}`
+  }
 }
 
 // inicio del movimiento de los meteoritos

@@ -22,10 +22,14 @@ body{
         margin: 10px;
         border-radius: 7px;
     }
+
+    .login{margin-left: 80%;}
+    
     label{
+        display: none;
         position: absolute;
-        margin-top: 6px;
-        margin-left: 70%;
+        top: 10px;
+        margin-left: 80%;
         font-size: 20px;
     }
     
