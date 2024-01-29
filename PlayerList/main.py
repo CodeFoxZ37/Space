@@ -79,7 +79,7 @@ async def update(item: Item):
      cursor.close()
 
 # Configuración de CORS
-origins = ["http://127.0.0.1:5500"]
+origins = ["http://127.0.0.1:5500","http://space.xco.com.do"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

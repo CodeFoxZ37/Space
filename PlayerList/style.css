@@ -41,9 +41,21 @@ body{
     .name{ position: absolute; margin: 11px; left: 60px;}
     .number{ position: absolute; margin: 11px;}
     .score{ margin: 11px 80%; color: rgba(0, 162, 255, 0.678);}
+
 }
 
 .container{
     height: 40px;
     width: 100%;
+    a{
+        position: relative;
+        background-color: #58cc4e;
+        color:#fff;
+        font-size: 15px;
+        text-decoration: none;
+        padding: 5px;
+        top: 10px;
+        margin: 10px;
+        border-radius: 7px;
+    }
 }
