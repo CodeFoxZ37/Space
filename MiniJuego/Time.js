@@ -1,5 +1,6 @@
 const score2 = document.querySelector(".score2")
 const list = document.querySelector(".list")
+const score = document.querySelector(".score")
 
 let number = 0;
 

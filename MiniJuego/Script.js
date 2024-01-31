@@ -31,6 +31,10 @@ class AsteroidRocket{
   }
 
   DrawAsteroid(){
+    if (!this.image.complete || this.image.naturalHeight === 0) {
+      // La imagen no está cargada correctamente
+      return;
+   }
     ctx.drawImage(this.image, this.x, this.y);
   }
 
@@ -74,9 +78,9 @@ const asteroidDeath = new AsteroidRocket(canvas.width + 10000, canvas.height - M
 const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,"special",'image/asteroideToxico.png')
 const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80),-1, 2,"special",'image/AsteroideEletrico.png')
 const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/Asteroide-Z.png')
-const asteroideEnergy = new AsteroidRocket(canvas.width + 1000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,"special",'image/AsteroideEnergia.png')
-// Funciones para que se ejecute el programa
+const asteroideEnergy = new AsteroidRocket(canvas.width + 1000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/AsteroideEnergia.png')
 
+// Funciones para que se ejecute el programa
 const AllAsteroids = [
   ...asteroids,
   asteroidHealth,
@@ -146,6 +150,7 @@ const checkCollision = () => {
       if (distanceToLaser < laserRadius + meteoriteRadius) {
         energy.splice(i, 1);
         asteroid.lifeAsteroid();
+        if(asteroid === asteroideEnergy) createFragmet(asteroideEnergy.x, asteroideEnergy.y)
 
         // Modificación: Verificar si el asteroide aún tiene resistencia antes de reiniciarlo
         break;  // Termina el bucle al encontrar la primera colisión, ya que un láser solo puede afectar a un asteroide.
@@ -155,7 +160,7 @@ const checkCollision = () => {
     if (life.offsetWidth == 0) {
       death.style.display = "block";
       death2.style.display = "block";
-      clearInterval(time);
+      clearInterval(time)
     }
   }
 };
@@ -176,6 +181,38 @@ function update() {
   }
   requestAnimationFrame(update);
 }
+
+class asteroidFragment{
+  constructor(x, y, speed, image){
+      this.x = x;
+      this.y = y;
+      this.speed = speed;
+      this.image = new Image();
+      this.image.src = image;
+  }
+}
+
+const fragments = [];
+
+const createFragmet = (asteroidx,asteroidy)=>{
+ const fragment = new asteroidFragment(asteroidx,asteroidy, 1, "image/asteroide.png")
+ fragments.push(fragment)
+}
+
+const DrawFragmet = (imagen, x, y)=>{
+  ctx3.drawImage(imagen, x, y)
+}
+
+function updateFragment() {
+  ctx3.clearRect(0,0,canvas.width,canvas.height)
+  for (let i = 0; i < fragments.length; i++) {
+    fragments[i].x += fragments[i].speed;
+    DrawFragmet(fragments[i].image,fragments[i].x, fragments[i].y);
+  }
+  requestAnimationFrame(updateFragment);
+}
+
+updateFragment()
 
 // Controles
 let keyState = {};
@@ -277,7 +314,6 @@ function updateMeteorite(){
   Asteroid_z.DrawAsteroid();
   asteroideEnergy.DrawAsteroid();
   checkCollision();
-  
   requestAnimationFrame(updateMeteorite);
 }
 
@@ -290,6 +326,7 @@ const writename = ()=>{
 updateMeteorite();
 update(); 
 writename()
+
 reboot.addEventListener("click", function(){
   if(localStorage.getItem("user") !== null){
     const data ={
