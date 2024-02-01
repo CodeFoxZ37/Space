@@ -40,9 +40,9 @@ class AsteroidRocket{
 
   AsteroidDisplacement(){
     ctx.drawImage(this.image, this.x, this.y)
-    this.x = canvas.width + Math.round(Math.random() * 200 + 100)
+    this.x = canvas.width + Math.round(Math.random() * 400 + 100)
     this.y = canvas.height - Math.round(Math.random() * 250 + 80)
-    this.speed = - Math.round(Math.random() * 10 + 4);
+    this.speed = - Math.round(Math.random() * 10 + 3);
   }
 
   SpecialAsteroidDisplacement(x,speed){
@@ -74,11 +74,11 @@ const asteroids = [
   new AsteroidRocket(canvas.width + 220, canvas.height - Math.round(Math.random() * 250 + 80), -5,1,"normal",'image/asteroide.png'),
 ]
 const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,"special",'image/asteroideSalud.png')
-const asteroidDeath = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,3,"special",'image/asteroideN2.png')
+const asteroidDeath = new AsteroidRocket(canvas.width + 10800, canvas.height - Math.round(Math.random() * 250 + 80), -1,3,"special",'image/asteroideN2.png')
 const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,"special",'image/asteroideToxico.png')
-const asteroidElectric = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80),-1, 2,"special",'image/AsteroideEletrico.png')
-const Asteroid_z = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/Asteroide-Z.png')
-const asteroideEnergy = new AsteroidRocket(canvas.width + 1000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/AsteroideEnergia.png')
+const asteroidElectric = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80),-1, 2,"special",'image/AsteroideEletrico.png')
+const Asteroid_z = new AsteroidRocket(canvas.width + 12000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/Asteroide-Z.png')
+const asteroideEnergy = new AsteroidRocket(canvas.width + 4600, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/AsteroideEnergia.png')
 
 // Funciones para que se ejecute el programa
 const AllAsteroids = [
@@ -103,6 +103,7 @@ const checkCollision = () => {
     const distancia4 = Math.sqrt((ToxiAsteroid.x - spaceship.x) ** 2 + (ToxiAsteroid.y - spaceship.y) ** 2);
     const distancia5 = Math.sqrt((asteroidElectric.x - spaceship.x) ** 2 + (asteroidElectric.y - spaceship.y) ** 2);
     const distancia6 = Math.sqrt((Asteroid_z.x - spaceship.x) ** 2 + (Asteroid_z.y - spaceship.y) ** 2);
+    const distancia7 = Math.sqrt((asteroideEnergy.x - spaceship.x) ** 2 + (asteroideEnergy.y - spaceship.y) ** 2);
     const ditances = asteroids.some((otherAsteroid) => {
       return (
         otherAsteroid !== asteroid &&
@@ -133,6 +134,8 @@ const checkCollision = () => {
       ToxiAsteroid.asteroidx();
     }
 
+    else if (distancia7 < meteoriteRadius + circleRadius && energy2.offsetWidth < 300) energy2.style.width = `${parseInt(energy2.offsetWidth) + 2}px`;
+
     for (let i = energy.length - 1; i >= 0; i--) {
       const laserRadius = 8;
 
@@ -150,7 +153,6 @@ const checkCollision = () => {
       if (distanceToLaser < laserRadius + meteoriteRadius) {
         energy.splice(i, 1);
         asteroid.lifeAsteroid();
-        if(asteroid === asteroideEnergy) createFragmet(asteroideEnergy.x, asteroideEnergy.y)
 
         // Modificación: Verificar si el asteroide aún tiene resistencia antes de reiniciarlo
         break;  // Termina el bucle al encontrar la primera colisión, ya que un láser solo puede afectar a un asteroide.
@@ -181,38 +183,6 @@ function update() {
   }
   requestAnimationFrame(update);
 }
-
-class asteroidFragment{
-  constructor(x, y, speed, image){
-      this.x = x;
-      this.y = y;
-      this.speed = speed;
-      this.image = new Image();
-      this.image.src = image;
-  }
-}
-
-const fragments = [];
-
-const createFragmet = (asteroidx,asteroidy)=>{
- const fragment = new asteroidFragment(asteroidx,asteroidy, 1, "image/asteroide.png")
- fragments.push(fragment)
-}
-
-const DrawFragmet = (imagen, x, y)=>{
-  ctx3.drawImage(imagen, x, y)
-}
-
-function updateFragment() {
-  ctx3.clearRect(0,0,canvas.width,canvas.height)
-  for (let i = 0; i < fragments.length; i++) {
-    fragments[i].x += fragments[i].speed;
-    DrawFragmet(fragments[i].image,fragments[i].x, fragments[i].y);
-  }
-  requestAnimationFrame(updateFragment);
-}
-
-updateFragment()
 
 // Controles
 let keyState = {};
@@ -278,11 +248,11 @@ function updateMeteorite(){
       asteroidHealth.SpecialAsteroidDisplacement(3000,1);
     }
     else if(asteroidDeath.x < -50){
-      asteroidDeath.SpecialAsteroidDisplacement(200,2);
+      asteroidDeath.SpecialAsteroidDisplacement(700,2);
     }
 
     else if(ToxiAsteroid.x < -50){
-      ToxiAsteroid.SpecialAsteroidDisplacement(300,1);
+      ToxiAsteroid.SpecialAsteroidDisplacement(500,1);
     }
 
     else if(asteroidElectric.x < -50){
@@ -294,7 +264,7 @@ function updateMeteorite(){
     }
 
     else if(asteroideEnergy.x < -50){
-      asteroideEnergy.SpecialAsteroidDisplacement(700,1)
+      asteroideEnergy.SpecialAsteroidDisplacement(2500,1)
     }
 
     asteroid.x += asteroid.speed
