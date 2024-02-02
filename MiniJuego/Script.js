@@ -50,6 +50,7 @@ class AsteroidRocket{
     this.x = canvas.width + x;
     this.y = canvas.height - Math.round(Math.random() * 250 + 80)
     this.speed = -speed
+    this.endurance = this.originEndurance
   }
 
   asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 500 + 100)}
