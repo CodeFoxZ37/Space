@@ -55,7 +55,7 @@ class AsteroidRocket{
     this.endurance = this.originEndurance
   }
 
-  asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 500 + 100)}
+  asteroidx(){ this.x = canvas.width + Math.round(Math.random() * 800 + 400)}
 
   lifeAsteroid(){
     this.endurance = this.endurance - 1
@@ -80,7 +80,7 @@ const asteroidHealth = new AsteroidRocket(canvas.width + 4000, canvas.height - M
 const asteroidDeath = new AsteroidRocket(canvas.width + 10800, canvas.height - Math.round(Math.random() * 250 + 80), -1,3,"special",'image/asteroideN2.png')
 const ToxiAsteroid = new AsteroidRocket(canvas.width + 9000, canvas.height - Math.round(Math.random() * 250 + 80), -1,2,"special",'image/asteroideToxico.png')
 const asteroidElectric = new AsteroidRocket(canvas.width + 10000, canvas.height - Math.round(Math.random() * 250 + 80),-1, 2,"special",'image/AsteroideEletrico.png')
-const Asteroid_z = new AsteroidRocket(canvas.width + 200, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/Asteroide-Z.png')
+const Asteroid_z = new AsteroidRocket(canvas.width + 12000, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/Asteroide-Z.png')
 const asteroideEnergy = new AsteroidRocket(canvas.width + 4600, canvas.height - Math.round(Math.random() * 250 + 80), -1,1,"special",'image/AsteroideEnergia.png')
 
 // Funciones para que se ejecute el programa
@@ -128,14 +128,6 @@ const checkCollision = () => {
       spaceship.speed = 1;
       setTimeout(() => (spaceship.speed = 5), 10000);
     } else if (distancia6 < meteoriteRadius + circleRadius) power = true;
-
-    else if (ditances && permisio) {
-      asteroid.asteroidx();
-      asteroidDeath.asteroidx();
-      asteroidHealth.asteroidx();
-      asteroidElectric.asteroidx();
-      ToxiAsteroid.asteroidx();
-    }
 
     else if (distancia7 < meteoriteRadius + circleRadius && energy2.offsetWidth < 300) energy2.style.width = `${parseInt(energy2.offsetWidth) + 2}px`;
 
@@ -225,7 +217,11 @@ function handleKeyboardInput() {
     setTimeout(()=>{
       power = false
       permisio = false
-      ctx3.clearRect(0, 0, canvas.width, canvas.height)},1000)
+      ctx3.clearRect(0, 0, canvas.width, canvas.height)
+    },1000)
+    for (const asteroidToRemove of AllAsteroids) {
+      asteroidToRemove.asteroidx();
+    }  
   }
 
   else if(keyState[" "] && canAddEnergy && energy2.offsetWidth > 4){
